@@ -1,0 +1,28 @@
+{
+  "layout": "hero",
+  "palette": {
+    "primary": "#1e40af",
+    "secondary": "#6b7280",
+    "accent": "#2563eb",
+    "background": "#ffffff",
+    "text": "#111827"
+  },
+  "typography": {
+    "title": { "family": "Gelasio", "size": 56 },
+    "subtitle": { "family": "Inter", "size": 28 },
+    "body": { "family": "Inter", "size": 24 },
+    "mono": { "family": "DejaVu Sans Mono", "size": 18 }
+  },
+  "dimensions": { "width": 2000, "height": 800 },
+  "content": {
+    "title": "Prediction Market Landscape 2026",
+    "subtitle": "Key metrics across Polymarket, Kalshi, and Metaculus",
+    "metrics": [
+      { "label": "Total Volume", "value": "$42.5B" },
+      { "label": "Active Markets", "value": "12,450" },
+      { "label": "Avg Brier", "value": "0.178" },
+      { "label": "Forecasters", "value": "840K" }
+    ],
+    "footer": "Source: aggregated data as of June 2026"
+  }
+}

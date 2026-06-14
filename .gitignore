@@ -1,0 +1,9 @@
+node_modules/
+*.png
+!examples/*.png
+!assets/*.png
+output.*
+.DS_Store
+fonts/*.ttf
+fonts/*.woff2
+.env

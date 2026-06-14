@@ -1,0 +1,25 @@
+{
+  "layout": "donut",
+  "palette": {
+    "primary": "#1e40af",
+    "secondary": "#6b7280",
+    "accent": "#2563eb",
+    "background": "#f9fafb",
+    "text": "#111827"
+  },
+  "typography": {
+    "title": { "family": "Gelasio", "size": 44 },
+    "body": { "family": "Inter", "size": 22 }
+  },
+  "content": {
+    "title": "AI Model Market Share — June 2026",
+    "segments": [
+      { "label": "Claude", "value": 34, "color": "#c084fc" },
+      { "label": "GPT-4o", "value": 28, "color": "#10b981" },
+      { "label": "Gemini", "value": 18, "color": "#3b82f6" },
+      { "label": "Llama", "value": 12, "color": "#f97316" },
+      { "label": "Other", "value": 8, "color": "#94a3b8" }
+    ],
+    "callout": { "value": "34%", "label": "Claude leads" }
+  }
+}
