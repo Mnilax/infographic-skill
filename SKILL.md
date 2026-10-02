@@ -59,25 +59,19 @@ Gelasio (and similar Georgia replacements) does NOT have the glyph for `→`. Th
 When embedding images inline in docx, the paragraph's line height must accommodate the image height. Set the line height to match or exceed the image extent, or use `floating` positioning instead of inline.
 
 ### 4. Font family patching for weight matching
-When loading Gelasio or Inter from .woff2/.ttf files, register them with explicit `family` names that match the CSS/SVG `font-family` declarations. Mismatched family names cause weight fallback (bold renders as regular).
+The renderer passes `.ttf` file paths to resvg-js through `font.fontFiles`. The files' internal family names and weights must match the SVG declarations. Merely renaming a file does not change its internal font metadata. The renderer does not register `{family, weight, data}` objects or load `.woff2` files.
 
-```js
-// Correct: explicit family registration
-const fontGelasio400 = { family: "Gelasio", weight: 400, data: readFileSync("fonts/Gelasio-Regular.ttf") };
-const fontGelasio700 = { family: "Gelasio", weight: 700, data: readFileSync("fonts/Gelasio-Bold.ttf") };
-```
-
-## Fonts required
+## Optional custom fonts
 
 Place in `fonts/` directory:
 - `Gelasio-Regular.ttf`, `Gelasio-Bold.ttf` — serif, Georgia alternative
 - `Inter-Regular.ttf`, `Inter-SemiBold.ttf` — sans-serif, UI font
 - `DejaVuSansMono.ttf` — monospace, for code/data
 
-Download from Google Fonts or bundled in this skill.
+Download the fonts separately; this repository does not bundle them. System fonts provide fallback when the optional files are absent.
 
 ## Output specs
 
-- Default: 2000×800px at 2× DPI (renders 4000×1600, scales metadata)
+- Default: 2000×800 source pixels rendered at 2× pixel dimensions (4000×1600 PNG); no print-DPI metadata is set
 - Format: PNG (via resvg-js SVG rasterization)
 - Color space: sRGB

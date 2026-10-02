@@ -48,9 +48,10 @@ async function assemble(mdPath, bannerPaths, outputPath) {
     const trimmed = line.trim();
 
     // Heading
-    if (trimmed.startsWith("# ")) {
+    const heading = trimmed.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
       // Insert banner before major headings (if available)
-      if (bannerIndex < bannerPaths.length) {
+      if (heading[1].length === 1 && bannerIndex < bannerPaths.length) {
         const imgData = readFileSync(bannerPaths[bannerIndex]);
         children.push(
           new Paragraph({
@@ -59,7 +60,7 @@ async function assemble(mdPath, bannerPaths, outputPath) {
               before: 200,
               after: 200,
               lineRule: LineRuleType.AT_LEAST, // CRITICAL: explicit lineRule
-              line: 800, // Accommodate image height
+              line: 3600, // 240 px at 96 DPI = 3600 twips
             },
             children: [
               new ImageRun({
@@ -75,7 +76,7 @@ async function assemble(mdPath, bannerPaths, outputPath) {
 
       children.push(
         new Paragraph({
-          heading: trimmed.startsWith("## ") ? HeadingLevel.HEADING_2 : HeadingLevel.HEADING_1,
+          heading: HeadingLevel[`HEADING_${heading[1].length}`],
           spacing: {
             before: 240,
             after: 120,
@@ -84,10 +85,10 @@ async function assemble(mdPath, bannerPaths, outputPath) {
           },
           children: [
             new TextRun({
-              text: trimmed.replace(/^#+\s*/, ""),
+              text: heading[2],
               bold: true,
               font: "Gelasio",
-              size: trimmed.startsWith("## ") ? 28 : 36,
+              size: heading[1].length > 1 ? 28 : 36,
             }),
           ],
         })
@@ -138,7 +139,7 @@ async function assemble(mdPath, bannerPaths, outputPath) {
           before: 200,
           after: 200,
           lineRule: LineRuleType.AT_LEAST,
-          line: 800,
+          line: 3600,
         },
         children: [
           new ImageRun({

@@ -1,3 +1,5 @@
+import { validateSpec } from "./validate.js";
+
 /**
  * Layout presets for infographic generation.
  * Each preset returns an SVG string from structured content + palette + typography.
@@ -7,7 +9,7 @@
  * Escape XML special characters in text content.
  */
 function escapeXml(str) {
-  if (!str) return "";
+  if (str === null || str === undefined) return "";
   return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -25,6 +27,7 @@ function escapeXml(str) {
  * content: { title, subtitle, metrics: [{ label, value }], footer? }
  */
 export function hero(spec) {
+  validateSpec(spec, "hero");
   const { palette, typography, content, dimensions } = spec;
   const w = dimensions?.width || 2000;
   const h = dimensions?.height || 800;
@@ -37,11 +40,11 @@ export function hero(spec) {
       const x = metricSpacing * (i + 1);
       return `
       <text x="${x}" y="${h * 0.58}" text-anchor="middle"
-            font-family="${typography?.title?.family || "Inter"}"
+            font-family="${escapeXml(typography?.title?.family || "Inter")}"
             font-size="${typography?.title?.size || 64}" font-weight="700"
             fill="${palette?.accent || "#2563eb"}">${escapeXml(m.value)}</text>
       <text x="${x}" y="${h * 0.68}" text-anchor="middle"
-            font-family="${typography?.body?.family || "Inter"}"
+            font-family="${escapeXml(typography?.body?.family || "Inter")}"
             font-size="${typography?.body?.size || 24}" font-weight="400"
             fill="${palette?.text || "#374151"}">${escapeXml(m.label)}</text>`;
     })
@@ -51,11 +54,11 @@ export function hero(spec) {
   <rect width="${w}" height="${h}" fill="${palette?.background || "#ffffff"}" rx="16"/>
   <rect x="0" y="0" width="${w}" height="6" fill="${palette?.primary || "#1e40af"}" rx="3"/>
   <text x="${w / 2}" y="${h * 0.2}" text-anchor="middle"
-        font-family="${typography?.title?.family || "Gelasio"}"
+        font-family="${escapeXml(typography?.title?.family || "Gelasio")}"
         font-size="${typography?.title?.size || 56}" font-weight="700"
         fill="${palette?.text || "#111827"}">${escapeXml(title)}</text>
   <text x="${w / 2}" y="${h * 0.32}" text-anchor="middle"
-        font-family="${typography?.body?.family || "Inter"}"
+        font-family="${escapeXml(typography?.body?.family || "Inter")}"
         font-size="${typography?.subtitle?.size || 28}" font-weight="400"
         fill="${palette?.secondary || "#6b7280"}">${escapeXml(subtitle)}</text>
   <line x1="${w * 0.1}" y1="${h * 0.42}" x2="${w * 0.9}" y2="${h * 0.42}"
@@ -64,7 +67,7 @@ export function hero(spec) {
   ${
     footer
       ? `<text x="${w / 2}" y="${h * 0.88}" text-anchor="middle"
-              font-family="${typography?.body?.family || "Inter"}"
+              font-family="${escapeXml(typography?.body?.family || "Inter")}"
               font-size="20" fill="${palette?.secondary || "#9ca3af"}">${escapeXml(footer)}</text>`
       : ""
   }
@@ -77,6 +80,7 @@ export function hero(spec) {
  * content: { title, segments: [{ label, value, color? }], callout: { value, label } }
  */
 export function donut(spec) {
+  validateSpec(spec, "donut");
   const { palette, typography, content, dimensions } = spec;
   const w = dimensions?.width || 2000;
   const h = dimensions?.height || 800;
@@ -114,7 +118,7 @@ export function donut(spec) {
     return `
     <rect x="${legendX}" y="${y - 12}" width="20" height="20" rx="4" fill="${color}"/>
     <text x="${legendX + 32}" y="${y + 3}"
-          font-family="${typography?.body?.family || "Inter"}"
+          font-family="${escapeXml(typography?.body?.family || "Inter")}"
           font-size="22" fill="${palette?.text || "#374151"}">${escapeXml(seg.label)} (${pct}%)</text>`;
   });
 
@@ -122,7 +126,7 @@ export function donut(spec) {
   <rect width="${w}" height="${h}" fill="${palette?.background || "#ffffff"}" rx="16"/>
   <text x="${w / 2}" y="60"
         text-anchor="middle"
-        font-family="${typography?.title?.family || "Gelasio"}"
+        font-family="${escapeXml(typography?.title?.family || "Gelasio")}"
         font-size="${typography?.title?.size || 44}" font-weight="700"
         fill="${palette?.text || "#111827"}">${escapeXml(title)}</text>
   ${arcs.join("\n")}
@@ -130,11 +134,11 @@ export function donut(spec) {
   ${
     callout
       ? `<text x="${cx}" y="${cy - 10}" text-anchor="middle"
-              font-family="${typography?.title?.family || "Inter"}"
+              font-family="${escapeXml(typography?.title?.family || "Inter")}"
               font-size="48" font-weight="700"
               fill="${palette?.accent || "#2563eb"}">${escapeXml(callout.value)}</text>
          <text x="${cx}" y="${cy + 30}" text-anchor="middle"
-              font-family="${typography?.body?.family || "Inter"}"
+              font-family="${escapeXml(typography?.body?.family || "Inter")}"
               font-size="20" fill="${palette?.secondary || "#6b7280"}">${escapeXml(callout.label)}</text>`
       : ""
   }
@@ -148,6 +152,7 @@ export function donut(spec) {
  * content: { title, subtitle?, items: [string], note? }
  */
 export function quickCard(spec) {
+  validateSpec(spec, "quick-card");
   const { palette, typography, content, dimensions } = spec;
   const w = dimensions?.width || 2000;
   const h = dimensions?.height || 800;
@@ -162,7 +167,7 @@ export function quickCard(spec) {
       return `
       <circle cx="${w * 0.08}" cy="${y - 5}" r="6" fill="${palette?.accent || "#2563eb"}"/>
       <text x="${w * 0.1}" y="${y}"
-            font-family="${typography?.body?.family || "Inter"}"
+            font-family="${escapeXml(typography?.body?.family || "Inter")}"
             font-size="${typography?.body?.size || 24}"
             fill="${palette?.text || "#374151"}">${escapeXml(item)}</text>`;
     })
@@ -172,13 +177,13 @@ export function quickCard(spec) {
   <rect width="${w}" height="${h}" fill="${palette?.background || "#ffffff"}" rx="16"/>
   <rect x="0" y="0" width="6" height="${h}" fill="${palette?.primary || "#1e40af"}" rx="3"/>
   <text x="${w * 0.05}" y="${h * 0.12}"
-        font-family="${typography?.title?.family || "Gelasio"}"
+        font-family="${escapeXml(typography?.title?.family || "Gelasio")}"
         font-size="${typography?.title?.size || 44}" font-weight="700"
         fill="${palette?.text || "#111827"}">${escapeXml(title)}</text>
   ${
     subtitle
       ? `<text x="${w * 0.05}" y="${h * 0.22}"
-              font-family="${typography?.body?.family || "Inter"}"
+              font-family="${escapeXml(typography?.body?.family || "Inter")}"
               font-size="24" fill="${palette?.secondary || "#6b7280"}">${escapeXml(subtitle)}</text>`
       : ""
   }
@@ -186,7 +191,7 @@ export function quickCard(spec) {
   ${
     note
       ? `<text x="${w * 0.05}" y="${h * 0.92}"
-              font-family="${typography?.mono?.family || "DejaVu Sans Mono"}"
+              font-family="${escapeXml(typography?.mono?.family || "DejaVu Sans Mono")}"
               font-size="18" fill="${palette?.secondary || "#9ca3af"}">${escapeXml(note)}</text>`
       : ""
   }
@@ -199,6 +204,7 @@ export function quickCard(spec) {
  * content: { title, columns: [{ name, color?, items: [string] }] }
  */
 export function comparison(spec) {
+  validateSpec(spec, "comparison");
   const { palette, typography, content, dimensions } = spec;
   const w = dimensions?.width || 2000;
   const h = dimensions?.height || 800;
@@ -220,7 +226,7 @@ export function comparison(spec) {
             fill="${color}" opacity="0.1"/>
       <text x="${x}" y="${headerY}"
             text-anchor="middle"
-            font-family="${typography?.title?.family || "Inter"}"
+            font-family="${escapeXml(typography?.title?.family || "Inter")}"
             font-size="28" font-weight="700"
             fill="${color}">${escapeXml(col.name)}</text>`;
 
@@ -228,7 +234,7 @@ export function comparison(spec) {
         .map((item, ii) => {
           const y = headerY + 60 + ii * itemSpacing;
           return `<text x="${x}" y="${y}" text-anchor="middle"
-                        font-family="${typography?.body?.family || "Inter"}"
+                        font-family="${escapeXml(typography?.body?.family || "Inter")}"
                         font-size="${typography?.body?.size || 22}"
                         fill="${palette?.text || "#374151"}">${escapeXml(item)}</text>`;
         })
@@ -252,7 +258,7 @@ export function comparison(spec) {
   <rect width="${w}" height="${h}" fill="${palette?.background || "#ffffff"}" rx="16"/>
   <text x="${w / 2}" y="${h * 0.1}"
         text-anchor="middle"
-        font-family="${typography?.title?.family || "Gelasio"}"
+        font-family="${escapeXml(typography?.title?.family || "Gelasio")}"
         font-size="${typography?.title?.size || 44}" font-weight="700"
         fill="${palette?.text || "#111827"}">${escapeXml(title)}</text>
   ${dividers}

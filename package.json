@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "render": "node scripts/render.js",
-    "example": "node scripts/render.js examples/spec.example.json output.png"
+    "example": "node scripts/render.js examples/spec.example.json output.png",
+    "test": "node --test tests/*.test.js"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.0",

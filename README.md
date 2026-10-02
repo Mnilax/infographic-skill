@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Claude Skill for rendering editorial infographics from structured JSON specs. Produces SVG → PNG at 2× resolution via [resvg-js](https://github.com/nicolo-ribaudo/resvg-js). Optionally assembles PNG banners into `.docx` documents.
+Claude Skill for rendering editorial infographics from structured JSON specs. Produces SVG → PNG at 2× resolution via [resvg-js](https://github.com/thx/resvg-js). Optionally assembles PNG banners into `.docx` documents.
 
 Built for integration with Claude Projects / Claude Skills — feed it a visual spec, get a production-ready infographic.
 
@@ -15,7 +15,7 @@ Built for integration with Claude Projects / Claude Skills — feed it a visual 
 - **4 layout presets**: hero banner, donut chart, quick-card, side-by-side comparison
 - **2× resolution** rendering (2000×800 → 4000×1600 PNG)
 - **Custom fonts** — Gelasio (serif), Inter (sans), DejaVu Sans Mono
-- **SVG-first** — inspect/edit SVGs before rasterizing
+- **SVG templates** — `scripts/templates.js` generates the intermediate SVG in memory; the CLI writes PNG output
 - **Docx assembly** — combine markdown + PNG banners into a Word doc
 
 ## Install
@@ -23,6 +23,8 @@ Built for integration with Claude Projects / Claude Skills — feed it a visual 
 ```bash
 npm install
 ```
+
+Use Node.js 18+ to render and Node.js 20+ to run the regression tests. With Bun, `bun install --frozen-lockfile` uses the committed dependency versions.
 
 ### Fonts (optional)
 
@@ -125,6 +127,10 @@ Every spec includes:
 
 ## Known Gotchas
 
+Specs require positive integer dimensions (at most 8192 per side and 16777216 source pixels), hex colors, and positive finite font sizes. Donut values must be finite and nonnegative with a positive total. Invalid specs fail before rasterization. Text is escaped before insertion into SVG.
+
+DOCX assembly recognizes Markdown headings (`#` through `######`) and plain text. Other Markdown syntax is retained as text. Images are inserted as 600×240 banners; use that aspect ratio to avoid stretching.
+
 1. **docx lineRule** — always set `lineRule: "exact"` or `"atLeast"` explicitly. LibreOffice misrenders without it.
 2. **Unicode arrows** — Gelasio lacks `→` glyph. Always use ASCII `->`.
 3. **Image vs line height** — in docx, paragraph line height must accommodate inline images.
@@ -148,6 +154,14 @@ The `SKILL.md` file tells Claude how to use `render.js` to generate infographics
 - [ ] Animated SVG → GIF export
 - [ ] Claude tool API wrapper
 - [ ] Template gallery
+
+## Testing
+
+```bash
+npm test
+```
+
+Tests render all four presets, check hostile attributes and invalid chart values, verify PNG dimensions, and inspect heading styles in generated DOCX output.
 
 ## License
 
